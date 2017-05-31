@@ -1,0 +1,13 @@
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dw].[D_Scope] AS
+SELECT DISTINCT
+	ScopeID ScopeSID
+	,Scope
+FROM
+	dbo.Scope
+
+
+
+GO

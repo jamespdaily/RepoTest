@@ -1,0 +1,16 @@
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Supplier] (
+		[SupplierId]       [int] IDENTITY(1, 1) NOT NULL,
+		[SupplierName]     [varchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+		CONSTRAINT [PK27]
+		PRIMARY KEY
+		NONCLUSTERED
+		([SupplierId])
+	ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Supplier] SET (LOCK_ESCALATION = TABLE)
+GO
