@@ -2,30 +2,9 @@ SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 GO
 
-
-
-
-
-
-
-
 CREATE VIEW [dw].[F_Utilization] AS
 WITH 
 HVEC AS (
-	 --SELECT 
-		--ProjectId ProjectID
-		--,DU.CountryId
-		--,DateId
-		--,ScopeId
-		--,SUM(ISNULL(Hours,0)) Hours
-		--,SUM(CostAssociatedWithActualHours) AS Revenue
-	 --FROM 
-		--DetailedUtilization DU
-		--LEFT JOIN Country C ON DU.CountryId = C.CountryId
-	 --WHERE 
-		--IsHVEC = 1
-	 --GROUP BY ProjectId, DU.CountryId, DateId, ScopeId
-
 	 SELECT DISTINCT
 		pct.ProjectClientThemeId ProjectId 
 		,CC.CountryCityId CountryId
@@ -62,25 +41,7 @@ NonHVEC AS (
 )
 ,
 Utilization AS (		
-	--SELECT DISTINCT 
-	--		ISNULL(DU.ProjectID, FU.ProjectID) ProjectSID		
-	--		,ISNULL(DU.CountryID, FU.CountryID) CountryID
-	--		,ISNULL(DU.DateID, FU.DateID) DateID
-	--		,ISNULL(DU.ScopeID, FU.ScopeID) ScopeID
-	--		,SupplierID SupplierSID
-	--		,DU.AwardValue
-	--		,DU.Hours UtilizationHours
-	--		,FU.Hours ForecastHours
-	--		,FU.HVECHours ForecastHVECHours
-	--		,CostAssociatedWithActualHours
-	--FROM
-	--		dbo.DetailedUtilization DU FULL OUTER JOIN 
-	--		dbo.ForecastUtilization FU ON DU.ProjectID = FU.ProjectID AND DU.CountryID = FU.CountryID AND DU.DateID = FU.DateID AND FU.ScopeID = DU.ScopeID
-	--		JOIN Country C ON C.CountryID = ISNULL(DU.CountryID, FU.CountryID)
-	--		JOIN SupplierProject SP ON SP.ProjectId = ISNULL(DU.ProjectID, FU.ProjectID)
-
 	SELECT DISTINCT 
-		--ISNULL(DU.ProjectID, FU.ProjectID) ProjectID
 		PCT.ProjectClientThemeId ProjectSID
 		,CC.CountryCityId CountryID
 		,ISNULL(DU.DateId, FU.DateId) DateID
@@ -89,7 +50,6 @@ Utilization AS (
 		,DU.AwardValue
 		,DU.Hours UtilizationHours
 		,FU.Hours ForecastHours
-		,FU.HVECHours ForecastHVECHours
 		,CostAssociatedWithActualHours
 	FROM 
 		DetailedUtilization DU
@@ -109,7 +69,6 @@ SELECT
 	,U.AwardValue
 	,U.UtilizationHours
 	,U.ForecastHours
-	,U.ForecastHVECHours
 	,U.CostAssociatedWithActualHours
 	,ISNULL(H.Hours,0) HVECHours
 	,ISNULL(NH.Hours, 0) NonHVECHours
@@ -128,8 +87,4 @@ FROM
 		AND U.CountryId = NH.CountryId 
 		AND U.DateId = NH.DateId
 		AND U.ScopeId = NH.ScopeId
-
-
-
-
 GO

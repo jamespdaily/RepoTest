@@ -14,6 +14,7 @@ BEGIN TRANSACTION;
 
 BEGIN TRY
 
+-- Supplier
 	INSERT dbo.Supplier (SupplierName)
 	SELECT DISTINCT SupplierName 
 	FROM stage.EngineeringProductivity
@@ -21,6 +22,7 @@ BEGIN TRY
 		SELECT DISTINCT SupplierName FROM dbo.Supplier
 	);
 
+-- Client
 	INSERT dbo.Client (ClientName)
 	SELECT DISTINCT ClientName 
 	FROM stage.EngineeringProductivity
@@ -28,6 +30,7 @@ BEGIN TRY
 		SELECT DISTINCT ClientName FROM dbo.Client
 	);
 
+-- Project
 	INSERT dbo.Project (ProjectName)
 	SELECT DISTINCT ProjectName 
 	FROM stage.EngineeringProductivity
@@ -35,17 +38,8 @@ BEGIN TRY
 		SELECT DISTINCT ProjectName FROM dbo.Project
 	);
 
-	UPDATE proj
-	SET proj.ClientId = sub.ClientId
-	FROM dbo.Project proj
-	JOIN (
-		SELECT DISTINCT ProjectName
-			, ClientId 
-		FROM stage.EngineeringProductivity s
-		JOIN dbo.Client d ON s.ClientName = d.ClientName
-	) sub ON proj.ProjectName = sub.ProjectName;
 
-	-- INSERT supplier projects if not already mapped in dbo.SupplierProject
+-- Supplier Project
 	MERGE dbo.SupplierProject sp
 	USING (
 		SELECT DISTINCT ProjectId, SupplierId 
@@ -58,10 +52,29 @@ BEGIN TRY
 		INSERT (ProjectId, SupplierId)
 		VALUES (src.ProjectId, src.SupplierId);
 
+-- Project Client Theme
+	MERGE dbo.ProjectClientTheme pct
+	USING (
+		SELECT DISTINCT
+			c.ClientID
+			,p.ProjectId
+			,st.ShellThemeID
+		FROM 
+			stage.EngineeringProductivity ep
+			JOIN Project p ON ep.ProjectName = p.ProjectName
+			JOIN Client c ON ep.ClientName = c.ClientName
+			JOIN ShellTheme st ON ep.ShellTheme = st.ShellTheme
+	) AS src (ClientID, ProjectID, ShellThemeID)
+		ON pct.ClientID = src.ClientId AND pct.ProjectID = src.ProjectID AND pct.ShellThemeID = src.ShellThemeID
+	WHEN NOT MATCHED THEN
+		INSERT (ClientID, ProjectID, ShellThemeID)
+		VALUEs (src.ClientID, src.ProjectID, src.ShellThemeID);
+
+-- Engineering Productivity
 	MERGE dbo.EngineeringProductivity ep
 	USING (
 		SELECT DISTINCT 
-			ProjectId, DateId
+			ProjectClientThemeId, DateID
 			, GETDATE() AS LastModifiedDate, GETDATE() AS SubmitDate
 			, EngineeringHoursPieceEquipment
 			, ProcessHoursUniquePiece
@@ -77,8 +90,13 @@ BEGIN TRY
 			, ProcurementHoursUniquePiece
 		FROM stage.EngineeringProductivity stage
 		JOIN dbo.Project p ON stage.ProjectName = p.ProjectName
+		JOIN dbo.Client c ON stage.ClientName = c.ClientName
+		JOIN dbo.ShellTheme st ON stage.ShellTheme = st.ShellTheme
+		JOIN dbo.ProjectClientTheme pct ON p.ProjectID = pct.ProjectID
+			AND c.ClientID = pct.ClientID
+			AND st.ShellThemeID = pct.ShellThemeID			
 		JOIN dbo.SubmissionDate sd ON stage.Date = sd.YearQuarter 
-	) AS src (ProjectId, DateId
+	) AS src (ProjectClientThemeID, DateID
 			, LastModifiedDate, SubmitDate
 			, EngineeringHoursPieceEquipment
 			, ProcessHoursUniquePiece
@@ -92,9 +110,9 @@ BEGIN TRY
 			, ElectricalHoursInstalledKW
 			, InstrumentHoursIO
 			, ProcurementHoursUniquePiece)
-			ON ep.ProjectId = src.ProjectId AND ep.DateId = src.DateId
+			ON ep.ProjectClientThemeID = src.ProjectClientThemeID AND ep.DateId = src.DateId 
 	WHEN NOT MATCHED THEN
-		INSERT (ProjectId, DateId
+		INSERT (ProjectClientThemeID, DateId
 			, LastModifiedDate, SubmitDate
 			, EngineeringHoursPieceEquipment
 			, ProcessHoursUniquePiece
@@ -108,7 +126,7 @@ BEGIN TRY
 			, ElectricalHoursInstalledKW
 			, InstrumentHoursIO
 			, ProcurementHoursUniquePiece)
-		VALUES (src.ProjectId, src.DateId
+		VALUES (src.ProjectClientThemeID, src.DateId
 			, src.LastModifiedDate, src.SubmitDate
 			, src.EngineeringHoursPieceEquipment
 			, src.ProcessHoursUniquePiece

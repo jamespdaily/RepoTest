@@ -15,25 +15,26 @@ BEGIN TRY
 			, (SELECT F5 FROM mirror.EngineeringProductivity WHERE F1 LIKE '%PARENT CONTRACTOR%') AS SupplierName
 			, F1 AS ProjectName
 			, F2 AS ClientName
-			, CAST(F3 AS DECIMAL(10,2)) AS EngineeringHoursPieceEquipment 
-			, CAST(F4 AS DECIMAL(10,2)) AS ProcessHoursUniquePiece 
-			, CAST(F5 AS DECIMAL(10,2)) AS MechanicalHoursIsometricDrawing 
-			, CAST(F6 AS DECIMAL(10,2)) AS PipinghoursTonneOfPiping 
-			, CAST(F7 AS DECIMAL(10,2)) AS PipingHoursLinearMetere 
-			, CAST(F8 AS DECIMAL(10,2)) AS RevisionsIsometricDrawing 
-			, CAST(F9 AS DECIMAL(10,2)) AS CivilHoursConcreteCubicMeter 
-			, CAST(F10 AS DECIMAL(10,2)) AS CivilHoursTonneSteel 
-			, CAST(F11 AS DECIMAL(10,2)) AS ElectricalHoursConsumer 
-			, CAST(F12 AS DECIMAL(10,2)) AS ElectricalHoursInstalledKW 
-			, CAST(F13 AS DECIMAL(10,2)) AS InstrumentHoursIO 
-			, CAST(F14 AS DECIMAL(10,2)) AS ProcurementHoursUniquePiece 
+			, F3 AS ShellTheme
+			, CAST(F4 AS DECIMAL(10,2)) AS EngineeringHoursPieceEquipment 
+			, CAST(F5 AS DECIMAL(10,2)) AS ProcessHoursUniquePiece 
+			, CAST(F6 AS DECIMAL(10,2)) AS MechanicalHoursIsometricDrawing 
+			, CAST(F7 AS DECIMAL(10,2)) AS PipinghoursTonneOfPiping 
+			, CAST(F8 AS DECIMAL(10,2)) AS PipingHoursLinearMetere 
+			, CAST(F9 AS DECIMAL(10,2)) AS RevisionsIsometricDrawing 
+			, CAST(F10 AS DECIMAL(10,2)) AS CivilHoursConcreteCubicMeter 
+			, CAST(F11 AS DECIMAL(10,2)) AS CivilHoursTonneSteel 
+			, CAST(F12 AS DECIMAL(10,2)) AS ElectricalHoursConsumer 
+			, CAST(F13 AS DECIMAL(10,2)) AS ElectricalHoursInstalledKW 
+			, CAST(F14 AS DECIMAL(10,2)) AS InstrumentHoursIO 
+			, CAST(F15 AS DECIMAL(10,2)) AS ProcurementHoursUniquePiece 
 			, DateLoaded
 			, SourceFile
 		FROM mirror.EngineeringProductivity
 		WHERE F1 NOT LIKE '%ENGINEERING PRODUCTIVITY KEY PERFORMANCE INDICATORS FOR%'
 			AND F1 NOT LIKE '%PARENT CONTRACTOR%'
 			AND F1 NOT LIKE '%Project Name%'
-	) AS src (Date, SupplierName, ProjectName, ClientName
+	) AS src (Date, SupplierName, ProjectName, ClientName, ShellTheme
 			, EngineeringHoursPieceEquipment
 			, ProcessHoursUniquePiece
 			, MechanicalHoursIsometricDrawing
@@ -47,9 +48,9 @@ BEGIN TRY
 			, InstrumentHoursIO
 			, ProcurementHoursUniquePiece
 			, DateLoaded, SourceFile)
-		ON ep.Date = src.Date AND ep.SupplierName = src.SupplierName AND ep.ProjectName = src.ProjectName AND ep.ClientName = src.ClientName
+		ON ep.Date = src.Date AND ep.SupplierName = src.SupplierName AND ep.ProjectName = src.ProjectName AND ep.ClientName = src.ClientName AND ep.ShellTheme = src.ShellTheme
 	WHEN NOT MATCHED THEN
-		INSERT (Date, SupplierName, ProjectName, ClientName
+		INSERT (Date, SupplierName, ProjectName, ClientName, ShellTheme
 			, EngineeringHoursPieceEquipment
 			, ProcessHoursUniquePiece
 			, MechanicalHoursIsometricDrawing
@@ -63,7 +64,7 @@ BEGIN TRY
 			, InstrumentHoursIO
 			, ProcurementHoursUniquePiece
 			, DateLoaded, SourceFile)
-		VALUES (src.Date, src.SupplierName, src.ProjectName, src.ClientName
+		VALUES (src.Date, src.SupplierName, src.ProjectName, src.ClientName, src.ShellTheme
 			, src.EngineeringHoursPieceEquipment
 			, src.ProcessHoursUniquePiece
 			, src.MechanicalHoursIsometricDrawing

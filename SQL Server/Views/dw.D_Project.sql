@@ -4,6 +4,8 @@ GO
 
 
 
+
+
 CREATE VIEW [dw].[D_Project] 
 AS
 	--SELECT DISTINCT
@@ -33,7 +35,7 @@ AS
 		,(SELECT FullName FROM Person WHERE PersonID = PE.ShellPM) ShellPM
 		,(SELECT FullName FROM Person WHERE PersonID = PE.ASContractorManager) ASContractorManager
 		,(SELECT FullName FROM Person WHERE PersonID = PE.ShellCPFocalPoint) ShellCPFocalPoint
-		,EFAProject
+		,'Yes' EFAProject
 	FROM 
 		dbo.Project P
 		LEFT JOIN dbo.ProjectClientTheme PCT ON P.ProjectID = PCT.ProjectID
@@ -41,6 +43,7 @@ AS
 		LEFT JOIN dbo.ShellTheme ST ON PCT.ShellThemeId = ST.ShellThemeID
 		LEFT JOIN dbo.DetailedUtilization DU ON PCT.ProjectClientThemeID = DU.ProjectClientThemeId
 		LEFT JOIN dbo.ProjectEvaluation PE ON P.ProjectId = PE.ProjectID
+
 
 
 

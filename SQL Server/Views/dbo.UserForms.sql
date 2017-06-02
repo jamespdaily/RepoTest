@@ -2,28 +2,30 @@ SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE VIEW [dbo].[vw_Users]
+CREATE VIEW [dbo].[UserForms]
 AS
 SELECT
 	UserName
-	,SupplierID
+	,FormID
 FROM 
 	iVEDiXCMD_ShellSRM_DEV.dbo.UserLogin UL
 	JOIN iVEDiXCMD_ShellSRM_DEV.dbo.Individual I 
 		ON UL.IndividualID = I.IndividualId
-	JOIN SHELL_SRM_V2.dbo.Supplier S 
-		ON I.CompanyName = S.SupplierName 
+	JOIN Forms F ON F.FormName = 'Evaluation'
+WHERE 
+	CompanyName = 'Shell'
 
 UNION ALL
 
 SELECT
 	UserName
-	,-1 SupplierID
+	,FormID
 FROM 
 	iVEDiXCMD_ShellSRM_DEV.dbo.UserLogin UL
 	JOIN iVEDiXCMD_ShellSRM_DEV.dbo.Individual I 
 		ON UL.IndividualID = I.IndividualId
+	JOIN Forms F ON F.FormName <> 'Evaluation'
 WHERE 
-	CompanyName = 'Shell'
+	CompanyName <> 'Shell'
 
 GO

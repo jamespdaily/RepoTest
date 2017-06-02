@@ -17,6 +17,7 @@ CREATE TABLE [mirror].[EngineeringProductivity] (
 		[F12]            [nvarchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[F13]            [nvarchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[F14]            [nvarchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+		[F15]            [nvarchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[DateLoaded]     [datetime] NULL,
 		[SourceFile]     [nvarchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL
 ) ON [PRIMARY]

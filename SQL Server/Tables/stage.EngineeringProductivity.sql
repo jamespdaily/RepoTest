@@ -7,6 +7,7 @@ CREATE TABLE [stage].[EngineeringProductivity] (
 		[SupplierName]                        [varchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[ProjectName]                         [varchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[ClientName]                          [varchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+		[ShellTheme]                          [varchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[EngineeringHoursPieceEquipment]      [decimal](10, 2) NULL,
 		[ProcessHoursUniquePiece]             [decimal](10, 2) NULL,
 		[MechanicalHoursIsometricDrawing]     [decimal](10, 2) NULL,

@@ -5,7 +5,7 @@ GO
 CREATE TABLE [dbo].[ProjectEvaluation] (
 		[ProjectEvaluationId]       [int] IDENTITY(1, 1) NOT NULL,
 		[DateId]                    [int] NULL,
-		[ProjectId]                 [int] NULL,
+		[SupplierProjectId]         [int] NULL,
 		[ContractValueRange]        [varchar](2) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[SafetyScore]               [decimal](18, 2) NULL,
 		[SafetyComment]             [varchar](500) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
@@ -58,10 +58,10 @@ ALTER TABLE [dbo].[ProjectEvaluation]
 GO
 ALTER TABLE [dbo].[ProjectEvaluation]
 	WITH CHECK
-	ADD CONSTRAINT [RefProject63]
-	FOREIGN KEY ([ProjectId]) REFERENCES [dbo].[Project] ([ProjectId])
+	ADD CONSTRAINT [RefPSupplierroject63]
+	FOREIGN KEY ([SupplierProjectId]) REFERENCES [dbo].[SupplierProject] ([SupplierProjectId])
 ALTER TABLE [dbo].[ProjectEvaluation]
-	CHECK CONSTRAINT [RefProject63]
+	CHECK CONSTRAINT [RefPSupplierroject63]
 
 GO
 ALTER TABLE [dbo].[ProjectEvaluation]
