@@ -3,5 +3,5 @@
   <ServerVersion>Sql2016</ServerVersion>
   <ServerName>CRIVEDDB5</ServerName>
   <DatabaseName>SHELL_SRM_V2</DatabaseName>
-  <DatabaseInformation Version="2" />
+  <DatabaseInformation Version="3" />
 </DatabaseSettings>
